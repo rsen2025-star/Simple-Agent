@@ -1,0 +1,64 @@
+sp {initialize-calculator
+   (state <s> ^superstate nil)
+-->
+   (<s> ^num1 5)
+   (<s> ^num2 10)
+   (<s> ^res nil)
+}
+
+sp {propose-calculator
+   (state <s> ^num1 <n1>)
+   (state <s> ^num2 <n2>)
+   (state <s> ^res <r>)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name add)
+   (<o> ^name sub)
+   (<o> ^name mul)
+   (<o> ^name div)
+}
+
+sp {apply-calculator
+   (state <s> ^operator <o>)
+   (<o> ^name add)
+   (state <s> ^num1 <n1>)
+   (state <s> ^num2 <n2>)
+   (state <s> ^res <r>)
+-->
+   (<s> ^res (+ <n1> <n2>))
+   (write (crlf) |Result = |(+ <n1> <n2>)(crlf))
+   
+}
+sp {apply-subtraction
+   (state <s> ^operator <o>)
+   (<o> ^name sub)
+   (state <s> ^num1 <n1>)
+   (state <s> ^num2 <n2>)
+   (state <s> ^res <r>)
+-->
+   (<s> ^res (- <n1> <n2>))
+   (write (crlf) |Result = |(- <n1> <n2>)(crlf))
+   
+}
+sp {apply-multiply
+   (state <s> ^operator <o>)
+   (<o> ^name mul)
+   (state <s> ^num1 <n1>)
+   (state <s> ^num2 <n2>)
+   (state <s> ^res <r>)
+-->
+   (<s> ^res (* <n1> <n2>))
+   (write (crlf) |Result = |(* <n1> <n2>)(crlf))
+   
+}
+sp {apply-division
+   (state <s> ^operator <o>)
+   (<o> ^name div)
+   (state <s> ^num1 <n1>)
+   (state <s> ^num2 <n2>)
+   (state <s> ^res <r>)
+-->
+   (<s> ^res (/ <n1> <n2>))
+   (write (crlf) |Result = |(/ <n1> <n2>)(crlf))
+   (halt)
+}

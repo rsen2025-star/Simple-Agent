@@ -1,0 +1,119 @@
+sp {propose-initialize
+   (state <s> ^superstate nil
+               -^name)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name initialize-agent)
+}
+
+sp {apply-initialize
+   (state <s> ^operator.name initialize-agent)
+-->
+   (<s> ^hungry 9)
+   (<s> ^thirsty 11)
+}
+
+
+sp {propose-hungry
+   (state <s> ^hungry <h>)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name eat)
+}
+sp {propose-thirsty
+   (state <s> ^thirsty <t>)
+-->
+   (<s> ^operator <o> + )
+   (<o> ^name drink)
+}
+
+sp {apply-eat
+   (state <s> ^operator <o>)
+   (<o> ^name eat)
+   (state <s> ^thirsty <t>)
+   (state <s> ^hungry {<h> > 0})
+-->
+   (<s> ^hungry (- <h> 2)
+                 <h> -)
+   (<s> ^thirsty (+ <t> 1)
+                  <t> -)
+   (write (crlf) |Agent has eaten! Hungry Level = | (- <h> 2) (crlf))
+   (write (crlf) |Thirsty Level = | (+ <t> 1) (crlf))
+}
+
+sp {apply-drink
+   (state <s> ^operator <o>)
+   (<o> ^name drink)
+   (state <s> ^hungry <h>)
+   (state <s> ^thirsty {<t> > 0})
+-->
+   (<s> ^thirsty (- <t> 2)
+                  <t> -)
+   (<s> ^hungry (- <h> 1)
+                 <h> -)
+   (write (crlf) |Agent has drunk! Thirsty Level = | (- <t> 2) (crlf))
+   (write (crlf) |Hungry Level = | (- <h> 1) (crlf))
+}
+# sp {prefer-drink-thirsty
+#    (<s> ^operator <o1> ^name eat)
+#    (<s> ^operator <o2> ^name drink)
+#    (state <s> ^hungry <h>)
+#    (state <s> ^thirsty <t>)
+#    -->
+#    (<s> ^operator <o1> = <o2>)
+# }
+sp {prefer-drink-hungry
+   (<s> ^operator <o1> ^name eat)
+   (<s> ^operator <o2> ^name drink)
+   (state <s> ^hungry 1)
+   -->
+   (<s> ^operator <o1> < <o2>)
+}
+# sp {prefer-eat
+#    (<s> ^operator <o1> ^name eat)
+#    (<s> ^operator <o2> ^name drink)
+#    (state <s> ^hungry {<h> > 1})
+#    (state <s> ^thirsty <t> <= <h>)
+#    -->
+#    (<s> ^operator <o1> > <o2>)
+# }
+sp {elaborate-thirsty
+   (state <s> ^thirsty {<t> > 7})
+   -->
+   (<s> ^status critical-thirst)
+
+}
+sp {prefer-critical-thirst
+   (state <s> ^status critical-thirst)
+   (<s> ^operator <o1> ^name eat)
+   (<s> ^operator <o2> ^name drink)
+   -->
+   (<s> ^operator <o1> < <o2>)
+}
+
+sp {stop-counter
+   (state <s> ^hungry 0)
+   -->
+   (write (crlf) | successful |)
+   (halt)
+}
+
+sp {stop-counter-unsuccessful
+   (state <s> ^hungry {<h> < 0})
+   -->
+   (write (crlf) | Unsuccessful |)
+   (halt)
+}
+sp {stop-counter-invalid
+   (state <s> ^thirsty {<t> < 0})
+   -->
+   (write (crlf) | Invalid |)
+   (halt)
+}
+
+sp {stop-counter-zero
+   (state <s> ^thirsty 0)
+   -->
+   (write (crlf) | Thirst ended |)
+   (halt)
+}

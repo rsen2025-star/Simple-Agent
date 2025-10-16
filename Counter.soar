@@ -1,0 +1,32 @@
+sp {initialize-counter
+   (state <s> ^superstate nil)
+-->
+   (<s> ^count 0)
+   (<s> ^goal 100)
+}
+
+sp {propose-increment
+   (state <s> ^count <c>)
+   (state <s> ^goal <g>)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name increment)
+}
+
+sp {apply-increment
+   (state <s> ^operator <o>)
+   (<o> ^name increment)
+   (state <s> ^count <c>)
+-->
+   (<s> ^count (+ <c> 1))
+   (<s> ^count <c> -)
+   (write (crlf) |Count = | <c> (crlf))
+}
+
+
+sp {stop-counter
+   (state <s> ^count 100)
+-->
+   (write |Final Count: 100| (crlf))
+   (halt)
+}
