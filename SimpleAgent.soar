@@ -1,13 +1,13 @@
-sp {propose-initialize
-   (state <s> ^superstate nil
-               -^name)
--->
-   (<s> ^operator <o> + =)
-   (<o> ^name initialize-agent)
-}
+# sp {propose-initialize
+#    (state <s> ^superstate nil
+#                -^name)
+# -->
+#    (<s> ^operator <o> + =)
+#    (<o> ^name initialize-agent)
+# }
 
-sp {apply-initialize
-   (state <s> ^operator.name initialize-agent)
+sp {initialize-agent
+   (state <s> ^superstate nil)
 -->
    (<s> ^hungry 9)
    (<s> ^thirsty 11)
@@ -17,13 +17,13 @@ sp {apply-initialize
 sp {propose-hungry
    (state <s> ^hungry <h>)
 -->
-   (<s> ^operator <o> + =)
+   (<s> ^operator <o> + >, =)
    (<o> ^name eat)
 }
 sp {propose-thirsty
    (state <s> ^thirsty <t>)
 -->
-   (<s> ^operator <o> + )
+   (<s> ^operator <o> + >, =)
    (<o> ^name drink)
 }
 
@@ -54,7 +54,7 @@ sp {apply-drink
    (write (crlf) |Agent has drunk! Thirsty Level = | (- <t> 2) (crlf))
    (write (crlf) |Hungry Level = | (- <h> 1) (crlf))
 }
-# sp {prefer-drink-thirsty
+# sp {prefer-one
 #    (<s> ^operator <o1> ^name eat)
 #    (<s> ^operator <o2> ^name drink)
 #    (state <s> ^hungry <h>)
@@ -69,14 +69,14 @@ sp {prefer-drink-hungry
    -->
    (<s> ^operator <o1> < <o2>)
 }
-# sp {prefer-eat
-#    (<s> ^operator <o1> ^name eat)
-#    (<s> ^operator <o2> ^name drink)
-#    (state <s> ^hungry {<h> > 1})
-#    (state <s> ^thirsty <t> <= <h>)
-#    -->
-#    (<s> ^operator <o1> > <o2>)
-# }
+sp {prefer-eat
+   (<s> ^operator <o1> ^name eat)
+   (<s> ^operator <o2> ^name drink)
+   (state <s> ^hungry {<h> > 1})
+   (state <s> ^thirsty <t> <= <h>)
+   -->
+   (<s> ^operator <o1> > <o2>)
+}
 sp {elaborate-thirsty
    (state <s> ^thirsty {<t> > 7})
    -->
